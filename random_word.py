@@ -2,28 +2,25 @@ import random
 from googletrans import Translator
 
 
-def random_word_from_list(updated_list):
-    picked_word = random.choice(updated_list)
-    return picked_word
+def random_word_from_list(all_norsk_words):
+    return random.choice(all_norsk_words)
 
 
-def inputted_number_of_words():
-    number_of_words_str = input("How many words do you want to see? ")
-    counter = int(number_of_words_str)
-    return counter
+def get_word_count_input():
+    return int(input("How many words do you want to see? "))
 
 
-def list_of_norsk_words(counter, updated_list):
+def get_norsk_words(counter, all_norsk_words):
     list_of_words = []
     while counter is not 0:
-        list_of_words.append(random_word_from_list(updated_list))
+        list_of_words.append(random_word_from_list(all_norsk_words))
         counter -= 1
     return list_of_words
 
 
-def remove_syntax_from_file(words_file):
+def remove_syntax_from_list(all_norsk_words):
     words_updated = []
-    for word in words_file:
+    for word in all_norsk_words:
         words_updated.append(word[:-1])
     return words_updated
 
@@ -37,13 +34,17 @@ def translate(norsk_words, translator):
     return list_of_translated_words
 
 
-if __name__ == "__main__":
+def main():
     with open('norsk.txt', 'r') as file:
-        words_file = file.readlines()
-        updated_list = remove_syntax_from_file(words_file)
-        number = inputted_number_of_words()
-        norsk_words = list_of_norsk_words(number * 3, updated_list)
+        all_norsk_words = file.readlines()
+        all_norsk_words = remove_syntax_from_list(all_norsk_words)
+        word_count = get_word_count_input()
+        norsk_words = get_norsk_words(word_count * 3, all_norsk_words)
         translator = Translator()
-        translation_list = translate(norsk_words, translator)
-        for words in translation_list[:number]:
-            print(words[0] + " --> " + words[1])
+        translations = translate(norsk_words, translator)
+        for translation in translations[:word_count]:
+            print(translation[0] + " --> " + translation[1])
+
+
+if __name__ == "__main__":
+    main()
